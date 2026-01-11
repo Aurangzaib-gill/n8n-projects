@@ -1,0 +1,623 @@
+{
+  "name": "Lahore Property Leads Office",
+  "nodes": [
+    {
+      "parameters": {
+        "content": "The Business Context\n\n“Lahore Property Leads Office”\nA small real estate brokerage that advertises properties on Facebook and receives daily inquiries via a website form and email.\n\n2. The Pain Point\n\nLeads are manually copied into Excel.\n\nDuplicate leads are common.\n\nAgents forget to follow up on old leads.\n\nNo daily visibility of how many new leads arrived.\n\n3. The Goal\n\nAutomatically collect leads every day.\n\nClean and standardize lead data.\n\nDetect duplicates.\n\nStore structured data in Google Sheets.\n\nProduce a daily summary count of new vs duplicate leads.\n\n4. Required Nodes (MUST USE)\n\nYou must solve this using only these nodes:\n\nSchedule Trigger\n\nEdit Fields / Set\n\nIf\n\nAggregate\n\nGoogle Sheets\n\n⚠️ You may use additional nodes only if absolutely necessary, but these 5 must be central.",
+        "width": 320,
+        "color": 3
+      },
+      "type": "n8n-nodes-base.stickyNote",
+      "position": [
+        784,
+        1104
+      ],
+      "typeVersion": 1,
+      "id": "f8f2d0ae-037e-4768-a64f-8762771d5ea1",
+      "name": "Sticky Note"
+    },
+    {
+      "parameters": {
+        "rule": {
+          "interval": [
+            {
+              "triggerAtHour": 10
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.scheduleTrigger",
+      "typeVersion": 1.3,
+      "position": [
+        -1728,
+        496
+      ],
+      "id": "d874e90a-1d57-43ce-8ea9-a096266c0a9c",
+      "name": "Schedule Trigger"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk",
+          "mode": "list",
+          "cachedResultName": "Lahore Properties (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 760660678,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit#gid=760660678"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -816,
+        496
+      ],
+      "id": "1dbfe857-de15-4d3c-bd95-7dc0efe7cf86",
+      "name": "Today's data",
+      "notesInFlow": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Yq5vD1E496OR6JnJ",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "Leads of last 24 hours"
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk",
+          "mode": "list",
+          "cachedResultName": "Lahore Properties (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 760660678,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit#gid=760660678"
+        },
+        "filtersUI": {
+          "values": [
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "New"
+            },
+            {
+              "lookupColumn": "Status",
+              "lookupValue": "Duplicate"
+            }
+          ]
+        },
+        "combineFilters": "OR",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        -1488,
+        496
+      ],
+      "id": "f80fc1e0-3d53-4097-855f-9d080410e8be",
+      "name": "ALL data",
+      "notesInFlow": true,
+      "alwaysOutputData": true,
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Yq5vD1E496OR6JnJ",
+          "name": "Google Sheets account"
+        }
+      },
+      "notes": "All data"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "e9a68478-016b-4855-a26a-a73365813448",
+              "name": "Contact Number",
+              "value": "={{ $json[\"Contact Number\"].toString().replace(/\\D/g, '').replace(/^0/, '92').replace(/^92/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "67450a19-fed7-471a-a629-d64dfec60ac6",
+              "name": "Email",
+              "value": "={{ $json[\"Email\"].toString().toLowerCase().trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -336,
+        496
+      ],
+      "id": "ee6cf873-aed5-4a5a-85b2-24a4c03faeb6",
+      "name": "Normalized Data",
+      "notesInFlow": true,
+      "notes": "New data"
+    },
+    {
+      "parameters": {
+        "fieldsToAggregate": {
+          "fieldToAggregate": [
+            {
+              "fieldToAggregate": "Contact Number",
+              "renameField": true,
+              "outputFieldName": "Historical_Contacts"
+            },
+            {
+              "fieldToAggregate": "Email",
+              "renameField": true,
+              "outputFieldName": "Historical_Emails"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.aggregate",
+      "typeVersion": 1,
+      "position": [
+        -1040,
+        496
+      ],
+      "id": "7b17efb5-62b2-4336-a66a-a6b0affb0942",
+      "name": "Aggregate",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "ac01c19d-cc9f-4739-9f1b-1f13f8ce6034",
+              "leftValue": "={{ $json.row_number }}",
+              "rightValue": "",
+              "operator": {
+                "type": "number",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.filter",
+      "typeVersion": 2.3,
+      "position": [
+        -576,
+        496
+      ],
+      "id": "765a02e7-50eb-4cee-9b96-d120e6ecb190",
+      "name": "Filter"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "1573bbfb-6866-4d82-a252-fdfddf589d08",
+              "name": "Contact Number",
+              "value": "={{ $json[\"Contact Number\"].toString().replace(/\\D/g, '').replace(/^0/, '92').replace(/^92/, '') }}",
+              "type": "string"
+            },
+            {
+              "id": "08bd7760-9ea7-4250-a41b-1334890c6abe",
+              "name": "Email",
+              "value": "={{ $json[\"Email\"].toString().toLowerCase().trim() }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        -1264,
+        496
+      ],
+      "id": "b4166008-0aca-4b47-b478-f01ad76032bb",
+      "name": "Normalized Node",
+      "notesInFlow": true,
+      "notes": "History data"
+    },
+    {
+      "parameters": {
+        "jsCode": "let newLeadsCount = 0;\nlet duplicateLeadsCount = 0;\nconst totalProcessed = items.length;\n\n// Create a text list of new leads for the AI\nlet newLeadsDetails = [];\n\nfor (const item of items) {\n  const status = item.json.Status; // This is set by your previous nodes\n  const name = item.json.Name || \"Unknown\";\n  const location = item.json[\"Preffered Locations\"] || \"Not specified\";\n  const demand = item.json[\"Marla Range\"] || \"N/A\";\n  const phone = item.json[\"Contact Number\"];\n\n  if (status === 'Duplicate') {\n    duplicateLeadsCount++;\n  } else {\n    newLeadsCount++;\n    // Add detail string to our list\n    newLeadsDetails.push(`- Name: ${name}, Interested in: ${location} (${demand} Marla), Phone: ${phone}`);\n  }\n}\n\nreturn [\n  {\n    json: {\n      summary: \"Daily Report Data\",\n      stats: {\n        timestamp: new Date().toISOString(),\n        total: totalProcessed,\n        new: newLeadsCount,\n        duplicates: duplicateLeadsCount\n      },\n      // This is the \"Gold\" for your AI node:\n      leads_context: newLeadsDetails.join(\"\\n\") \n    }\n  }\n];"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        224,
+        656
+      ],
+      "id": "e4f1c15c-0232-432b-bb06-de49bc532834",
+      "name": "Code in JavaScript"
+    },
+    {
+      "parameters": {
+        "jsCode": "// 1. Get the History from previous nodes\n// We use '|| []' to ensure it doesn't crash if history is empty\nconst historyContacts = $('Aggregate').first().json.Historical_Contacts || [];\nconst historyEmails = $('Aggregate').first().json.Historical_Emails || [];\n\n// 2. Create a list to track items we have seen IN THIS BATCH\nconst seenPhonesInBatch = new Set();\nconst seenEmailsInBatch = new Set();\n\nreturn items.map((item) => {\n  const phone = item.json[\"Contact Number\"].toString();\n  const email = item.json[\"Email\"].toString();\n\n  let status = 'New'; // Default Assumption\n\n  // CHECK 1: Is it in the OLD history?\n  if (historyContacts.includes(phone) || historyEmails.includes(email)) {\n    status = 'Duplicate';\n  }\n\n  // CHECK 2: Have we seen it earlier IN THIS SAME BATCH?\n  // (This catches Row 5 copying Row 3)\n  else if (seenPhonesInBatch.has(phone) || seenEmailsInBatch.has(email)) {\n    status = 'Duplicate';\n  }\n\n  // Add current item to our \"Seen\" lists for the NEXT item to check\n  seenPhonesInBatch.add(phone);\n  seenEmailsInBatch.add(email);\n\n  // Return the item with the new Status attached\n  return {\n    json: {\n      ...item.json,\n      Status: status\n    }\n  };\n});"
+      },
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        -128,
+        496
+      ],
+      "id": "d44f775b-090b-45aa-bf79-c7b8c3d5a1d5",
+      "name": "Code in JavaScript1"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "documentId": {
+          "__rl": true,
+          "value": "1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk",
+          "mode": "list",
+          "cachedResultName": "Lahore Properties (Responses)",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 760660678,
+          "mode": "list",
+          "cachedResultName": "Form Responses 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1ER8awO1HHZxiq4W8WmJMmq_l0APzqotEOosjCo229yk/edit#gid=760660678"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "row_number": "={{ $json.row_number }}",
+            "Contact Number": "={{ $json['Contact Number'] }}",
+            "Status": "={{ $json.Status }}",
+            "Email": "={{ $json.Email }}"
+          },
+          "matchingColumns": [
+            "row_number"
+          ],
+          "schema": [
+            {
+              "id": "Timestamp",
+              "displayName": "Timestamp",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Name",
+              "displayName": "Name",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Contact Number",
+              "displayName": "Contact Number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Preffered Locations",
+              "displayName": "Preffered Locations",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Marla Range",
+              "displayName": "Marla Range",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Any other demand",
+              "displayName": "Any other demand",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": true
+            },
+            {
+              "id": "Status",
+              "displayName": "Status",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "row_number",
+              "displayName": "row_number",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "number",
+              "canBeUsedToMatch": true,
+              "readOnly": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.7,
+      "position": [
+        208,
+        288
+      ],
+      "id": "0c685e09-0717-483e-a61b-0fb4ca2bb758",
+      "name": "Update row in sheet",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "Yq5vD1E496OR6JnJ",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-4o-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-4O-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "role": "system",
+              "content": "Role: You are an elite Executive Assistant.\n\nObjective: Write a high-value daily summary email based on the provided lead data.\n\nCRITICAL RULES (READ CAREFULLY):\n1. **NO FAKE DATA:** You must ONLY use the specific names, dates, and numbers provided in the \"User Input\". Do not invent names like \"John Doe\" or \"Jane Smith\". If the data says \"Unknown\", write \"Unknown\".\n2. **NO FAKE DATES:** Use the specific date provided in the input stats.\n3. **Analyze:** Look at the locations for trends. If 2+ leads have the same location, mention it in the \"Market Insight\".\n\nOutput Format:\nReturn a SINGLE Valid JSON object with keys \"subject\" and \"body\".\nDo not use markdown formatting for the JSON itself.\n\nTemplate Structure:\n{\n\"subject\": \"📊 Daily Lead Report: [Insert Actual Count] New Opportunities\",\n\"body\": \"Good Morning Aurangzaib Gill!<br><br>Here is your summary for <b>[Insert Actual Date]</b>.<br><br><b>📉 At a Glance:</b><ul><li>Total Processed: <b>[Insert Actual Total]</b></li><li>New Leads: <b>[Insert Actual New Count]</b></li><li>Duplicates Blocked: <b>[Insert Actual Duplicate Count]</b></li></ul><br><b>🚀 New Opportunities:</b><br>[Iterate through the provided leads list and format each one as follows:]<br><b>[Name]</b> is interested in:<br>Locations: <b>[Location]</b><br>Area: <b>[Marla Range]</b><br>Contact number: <b>[Phone]</b><br><br><b>💡 Market Insight:</b><br>[Insert your analysis of the actual data here]<br><br>Best regards,<br>Your AI Assistant\"\n}\n\ngenerate email with seperate two JSON objects:\nSubject\nBody"
+            },
+            {
+              "content": "=HERE IS THE REAL DATA TO USE FOR THE REPORT.\nDO NOT INVENT DATA. USE ONLY THE INFORMATION BELOW.\n\n--- REPORT DATE ---\n{{ $json.stats.timestamp }}\n\n--- STATS ---\nTotal Processed: {{ $json.stats.total }}\nNew Leads: {{ $json.stats.new }}\nDuplicates Blocked: {{ $json.stats.duplicates }}\n\n--- LEAD DETAILS LIST ---\n{{ $json.leads_context }}"
+            }
+          ]
+        },
+        "builtInTools": {},
+        "options": {
+          "textFormat": {
+            "textOptions": {
+              "type": "json_object"
+            }
+          }
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        528,
+        528
+      ],
+      "id": "dbaf7b2f-2b0f-475a-8506-6a983d44128b",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "9MY1NNCX08nhWftl",
+          "name": "n8n free OpenAI API credits"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "owner@gmail.com",
+        "subject": "={{ $json.output[0].content[0].text.subject }}",
+        "message": "={{ $json.output[0].content[0].text.body }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.2,
+      "position": [
+        880,
+        528
+      ],
+      "id": "8115078e-0335-4c34-9bf7-22185a89add7",
+      "name": "Send a message",
+      "webhookId": "65590120-79cb-492a-87cc-af422b89c15b",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "0VKeYuq2qP8uAS37",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Schedule Trigger": {
+      "main": [
+        [
+          {
+            "node": "ALL data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Today's data": {
+      "main": [
+        [
+          {
+            "node": "Filter",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ALL data": {
+      "main": [
+        [
+          {
+            "node": "Normalized Node",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalized Data": {
+      "main": [
+        [
+          {
+            "node": "Code in JavaScript1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Aggregate": {
+      "main": [
+        [
+          {
+            "node": "Today's data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Filter": {
+      "main": [
+        [
+          {
+            "node": "Normalized Data",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Normalized Node": {
+      "main": [
+        [
+          {
+            "node": "Aggregate",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Code in JavaScript1": {
+      "main": [
+        [
+          {
+            "node": "Update row in sheet",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "Code in JavaScript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update row in sheet": {
+      "main": [
+        []
+      ]
+    },
+    "Code in JavaScript": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Send a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "availableInMCP": false
+  },
+  "versionId": "5bdbda5e-6648-42c4-9f0b-f6f21b8a21ab",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "bbf4e55d5503993b15cb241d0c066820f89ca980b4cf6ca521cd536aaee999f5"
+  },
+  "id": "BjHPc9FBOX8wzEpC",
+  "tags": []
+}
